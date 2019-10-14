@@ -20,7 +20,7 @@ def read_all_file_name(filepath):
     for i in os.listdir(filepath):
         if i.endswith(".txt"):
             files.append(i)
-    return files
+    return files, len(files)
 
 
 def set_vocabulary(review, filepath):
@@ -40,19 +40,23 @@ def set_vocabulary(review, filepath):
     return vocabulary
 
 
-def training_vocabulary(neg_review, pos_review, filepath):
-    neg_vocabulary = set_vocabulary(neg_review, filepath + "/neg/")
-    pos_vocabulary = set_vocabulary(pos_review, filepath + "/pos/")
-
-    return {**neg_vocabulary, **pos_vocabulary}
+def merge_vocabulary(vocabulary_1, vocabulary_2):
+    return {**vocabulary_1, **vocabulary_2}
 
 
 # Driver
 
+small_training_action_corpus = read_all_file_name("../small_corpus/action")
+small_training_comedy_corpus = read_all_file_name("../small_corpus/comedy")
 
-training_pos_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/pos")
-training_neg_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/neg")
+small_action_corpus_vocabulary = set_vocabulary(small_training_action_corpus[0], "../small_corpus/action/")
+small_comedy_corpus_vocabulary = set_vocabulary(small_training_comedy_corpus[0], "../small_corpus/comedy/")
 
-dictionary = training_vocabulary(training_neg_file_name, training_pos_file_name, "../movie-review-HW2/aclImdb/train/")
-dictionary_frequency_viewer(dictionary)
-print(len(dictionary))
+small_corpus_vocabulary = merge_vocabulary(small_action_corpus_vocabulary, small_comedy_corpus_vocabulary)
+dictionary_frequency_viewer(small_corpus_vocabulary)
+# training_pos_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/pos")
+# training_neg_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/neg")
+#
+# dictionary = training_vocabulary(training_neg_file_name, training_pos_file_name, "../movie-review-HW2/aclImdb/train/")
+# dictionary_frequency_viewer(dictionary)
+# print(len(dictionary))

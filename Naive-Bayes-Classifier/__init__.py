@@ -6,7 +6,6 @@ from string import punctuation
 def file_name_viewer(file_name):
     for name in file_name:
         print(name)
-
     print(len(file_name))
 
 
@@ -90,6 +89,10 @@ def small_training_corpus():
         total_comedy_training_files / total_number_of_training_files)
     print("Probabilities for Action Class: ", action_class_prob)
     print("Probabilities for Comedy Class: ", comedy_class_prob)
+    if action_class_prob > comedy_class_prob:
+        print("Document Belong to Action Class. ")
+    else:
+        print("Document Belong to Comedy Class. ")
 
 
 small_training_corpus()

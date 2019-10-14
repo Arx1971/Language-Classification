@@ -10,6 +10,13 @@ def file_name_viewer(file_name):
     print(len(file_name))
 
 
+def sum_of_values(dictionary):
+    total = 0
+    for key, values in dictionary.items():
+        total += values
+    return total
+
+
 def dictionary_frequency_viewer(dictionary):
     for values, key in dictionary.items():
         print(values, key)
@@ -43,17 +50,44 @@ def set_vocabulary(review, filepath):
 def merge_vocabulary(vocabulary_1, vocabulary_2):
     return {**vocabulary_1, **vocabulary_2}
 
-def naive_byes_classifier_bag_of_words_model(vocabulary):
 
-# Driver
+def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, number_of_word_in_class,
+                                             total_vocabulary_size):
+    prob = 1.0
+    for name in test_review:
+        with open(filepath + name, "r") as reviews:
+            review = reviews.read()
+            words = re.split(r'[\s+`=~!@#$%^&*()_+\[\]{};\--\\:"|<,./<>?^]', review)
+            for word in words:
+                if word in vocabulary:
+                    prob *= ((vocabulary[word] + 1) / (number_of_word_in_class + total_vocabulary_size))
+                else:
+                    prob *= ((1) / (number_of_word_in_class + total_vocabulary_size))
+    return prob
 
-small_training_action_corpus = read_all_file_name("../small_corpus/train/action")
-small_training_comedy_corpus = read_all_file_name("../small_corpus/train/comedy")
-small_test_corpus = read_all_file_name("../small_corpus/test")
-small_action_corpus_vocabulary = set_vocabulary(small_training_action_corpus[0], "../small_corpus/train/action/")
-small_comedy_corpus_vocabulary = set_vocabulary(small_training_comedy_corpus[0], "../small_corpus//train/comedy/")
-small_corpus_vocabulary = merge_vocabulary(small_action_corpus_vocabulary, small_comedy_corpus_vocabulary)
 
+def small_training_corpus():
+    small_training_action_corpus = read_all_file_name("../small_corpus/train/action")
+    small_training_comedy_corpus = read_all_file_name("../small_corpus/train/comedy")
+    small_test_corpus = read_all_file_name("../small_corpus/test")
+    small_action_corpus_vocabulary = set_vocabulary(small_training_action_corpus[0], "../small_corpus/train/action/")
+    small_comedy_corpus_vocabulary = set_vocabulary(small_training_comedy_corpus[0], "../small_corpus//train/comedy/")
+    small_corpus_vocabulary = merge_vocabulary(small_action_corpus_vocabulary, small_comedy_corpus_vocabulary)
+    action_class_prob = naive_byes_classifier_bag_of_words_model(small_action_corpus_vocabulary,
+                                                                 "../small_corpus/test/",
+                                                                 small_test_corpus[0],
+                                                                 sum_of_values(small_action_corpus_vocabulary),
+                                                                 len(small_corpus_vocabulary)) * float(3 / 5.0)
+    comedy_class_prob = naive_byes_classifier_bag_of_words_model(small_comedy_corpus_vocabulary,
+                                                                 "../small_corpus/test/",
+                                                                 small_test_corpus[0],
+                                                                 sum_of_values(small_comedy_corpus_vocabulary),
+                                                                 len(small_corpus_vocabulary)) * float(2 / 5.0)
+    print(action_class_prob)
+    print(comedy_class_prob)
+
+
+small_training_corpus()
 
 # training_pos_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/pos")
 # training_neg_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/neg")

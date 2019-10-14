@@ -43,17 +43,18 @@ def set_vocabulary(review, filepath):
 def merge_vocabulary(vocabulary_1, vocabulary_2):
     return {**vocabulary_1, **vocabulary_2}
 
+def naive_byes_classifier_bag_of_words_model(vocabulary):
 
 # Driver
 
-small_training_action_corpus = read_all_file_name("../small_corpus/action")
-small_training_comedy_corpus = read_all_file_name("../small_corpus/comedy")
-
-small_action_corpus_vocabulary = set_vocabulary(small_training_action_corpus[0], "../small_corpus/action/")
-small_comedy_corpus_vocabulary = set_vocabulary(small_training_comedy_corpus[0], "../small_corpus/comedy/")
-
+small_training_action_corpus = read_all_file_name("../small_corpus/train/action")
+small_training_comedy_corpus = read_all_file_name("../small_corpus/train/comedy")
+small_test_corpus = read_all_file_name("../small_corpus/test")
+small_action_corpus_vocabulary = set_vocabulary(small_training_action_corpus[0], "../small_corpus/train/action/")
+small_comedy_corpus_vocabulary = set_vocabulary(small_training_comedy_corpus[0], "../small_corpus//train/comedy/")
 small_corpus_vocabulary = merge_vocabulary(small_action_corpus_vocabulary, small_comedy_corpus_vocabulary)
-dictionary_frequency_viewer(small_corpus_vocabulary)
+
+
 # training_pos_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/pos")
 # training_neg_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/neg")
 #

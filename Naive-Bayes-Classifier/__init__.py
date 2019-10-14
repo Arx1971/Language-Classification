@@ -62,7 +62,7 @@ def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, 
                 if word in vocabulary:
                     prob *= ((vocabulary[word] + 1) / (number_of_word_in_class + total_vocabulary_size))
                 else:
-                    prob *= ((1) / (number_of_word_in_class + total_vocabulary_size))
+                    prob *= (1 / (number_of_word_in_class + total_vocabulary_size))
     return prob
 
 
@@ -73,18 +73,23 @@ def small_training_corpus():
     small_action_corpus_vocabulary = set_vocabulary(small_training_action_corpus[0], "../small_corpus/train/action/")
     small_comedy_corpus_vocabulary = set_vocabulary(small_training_comedy_corpus[0], "../small_corpus//train/comedy/")
     small_corpus_vocabulary = merge_vocabulary(small_action_corpus_vocabulary, small_comedy_corpus_vocabulary)
+    total_number_of_training_files = (small_training_comedy_corpus[1] + small_training_action_corpus[1])
+    total_action_training_files = small_training_action_corpus[1]
+    total_comedy_training_files = small_training_comedy_corpus[1]
     action_class_prob = naive_byes_classifier_bag_of_words_model(small_action_corpus_vocabulary,
                                                                  "../small_corpus/test/",
                                                                  small_test_corpus[0],
                                                                  sum_of_values(small_action_corpus_vocabulary),
-                                                                 len(small_corpus_vocabulary)) * float(3 / 5.0)
+                                                                 len(small_corpus_vocabulary)) * float(
+        total_action_training_files / total_number_of_training_files)
     comedy_class_prob = naive_byes_classifier_bag_of_words_model(small_comedy_corpus_vocabulary,
                                                                  "../small_corpus/test/",
                                                                  small_test_corpus[0],
                                                                  sum_of_values(small_comedy_corpus_vocabulary),
-                                                                 len(small_corpus_vocabulary)) * float(2 / 5.0)
-    print(action_class_prob)
-    print(comedy_class_prob)
+                                                                 len(small_corpus_vocabulary)) * float(
+        total_comedy_training_files / total_number_of_training_files)
+    print("Probabilities for Action Class: ", action_class_prob)
+    print("Probabilities for Comedy Class: ", comedy_class_prob)
 
 
 small_training_corpus()

@@ -1,6 +1,6 @@
 import os
-from string import punctuation
 import re
+from string import punctuation
 
 
 def file_name_viewer(file_name):
@@ -28,9 +28,10 @@ def set_vocabulary(review, filepath):
     for review_name in review:
         with open(filepath + review_name, "r") as reviews:
             review = reviews.read()
-            words = re.split(r'[\s+`=~!@#$%^&*()_+\[\]{};\-\\:"|<,./<>?^]', review)
+            words = re.split(r'[\s+`=~!@#$%^&*()_+\[\]{};\--\\:"|<,./<>?^]', review)
             for word in words:
                 word = word.lower()
+                word = word.strip(punctuation)
                 if len(word) is not 0:
                     if word in vocabulary:
                         vocabulary[word] += 1
@@ -54,3 +55,4 @@ training_neg_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/n
 
 dictionary = training_vocabulary(training_neg_file_name, training_pos_file_name, "../movie-review-HW2/aclImdb/train/")
 dictionary_frequency_viewer(dictionary)
+print(len(dictionary))

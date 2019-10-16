@@ -3,6 +3,8 @@ import re
 from string import punctuation
 
 
+#  regular expression r'[\s+`=~!@#$%^&*()_+\[\]{};\--\\:"|<,./<>?^]'
+
 def file_name_viewer(file_name):
     for name in file_name:
         print(name)
@@ -34,7 +36,7 @@ def set_vocabulary(review, filepath):
     for review_name in review:
         with open(filepath + review_name, "r") as reviews:
             review = reviews.read()
-            words = re.split(r'[\s+`=~!@#$%^&*()_+\[\]{};\--\\:"|<,./<>?^]', review)
+            words = review.split()
             for word in words:
                 word = word.lower()
                 word = word.strip(punctuation)
@@ -43,6 +45,7 @@ def set_vocabulary(review, filepath):
                         vocabulary[word] += 1
                     else:
                         vocabulary[word] = 1
+
     return vocabulary
 
 
@@ -56,12 +59,13 @@ def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, 
     for name in test_review:
         with open(filepath + name, "r") as reviews:
             review = reviews.read()
-            words = re.split(r'[\s+`=~!@#$%^&*()_+\[\]{};\--\\:"|<,./<>?^]', review)
+            words = review.split()
             for word in words:
+                word = word.strip(punctuation)
                 if word in vocabulary:
                     prob *= ((vocabulary[word] + 1) / (number_of_word_in_class + total_vocabulary_size))
                 else:
-                    prob *= (1 / (number_of_word_in_class + total_vocabulary_size))
+                    prob *= ((1) / (number_of_word_in_class + total_vocabulary_size))
     return prob
 
 
@@ -72,6 +76,9 @@ def small_training_corpus():
     small_action_corpus_vocabulary = set_vocabulary(small_training_action_corpus[0], "../small_corpus/train/action/")
     small_comedy_corpus_vocabulary = set_vocabulary(small_training_comedy_corpus[0], "../small_corpus//train/comedy/")
     small_corpus_vocabulary = merge_vocabulary(small_action_corpus_vocabulary, small_comedy_corpus_vocabulary)
+    # print(small_corpus_vocabulary)
+    # print(small_action_corpus_vocabulary)
+    # print(small_comedy_corpus_vocabulary)
     total_number_of_training_files = (small_training_comedy_corpus[1] + small_training_action_corpus[1])
     total_action_training_files = small_training_action_corpus[1]
     total_comedy_training_files = small_training_comedy_corpus[1]
@@ -81,6 +88,7 @@ def small_training_corpus():
                                                                  sum_of_values(small_action_corpus_vocabulary),
                                                                  len(small_corpus_vocabulary)) * float(
         total_action_training_files / total_number_of_training_files)
+
     comedy_class_prob = naive_byes_classifier_bag_of_words_model(small_comedy_corpus_vocabulary,
                                                                  "../small_corpus/test/",
                                                                  small_test_corpus[0],
@@ -99,7 +107,6 @@ small_training_corpus()
 
 # training_pos_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/pos")
 # training_neg_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/neg")
-#
 # dictionary = training_vocabulary(training_neg_file_name, training_pos_file_name, "../movie-review-HW2/aclImdb/train/")
 # dictionary_frequency_viewer(dictionary)
 # print(len(dictionary))

@@ -1,6 +1,7 @@
 import os
 import re
 from string import punctuation
+from collections import Counter
 
 
 #  regular expression r'[\s+`=~!@#$%^&*()_+\[\]{};\--\\:"|<,./<>?^]'
@@ -50,7 +51,10 @@ def set_vocabulary(review, filepath):
 
 
 def merge_vocabulary(vocabulary_1, vocabulary_2):
-    return {**vocabulary_1, **vocabulary_2}
+    x = Counter(vocabulary_1)
+    y = Counter(vocabulary_2)
+    x.update(y)
+    return dict(x)
 
 
 def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, number_of_word_in_class,

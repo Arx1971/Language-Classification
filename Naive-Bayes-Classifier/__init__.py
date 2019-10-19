@@ -37,16 +37,16 @@ def set_vocabulary(review, filepath):
     for review_name in review:
         with open(filepath + review_name, "r") as reviews:
             review = reviews.read()
-            words = review.split()
+            words = re.split(r'[`=~!@#$%^&*()_+\[\]{};\--\\:"|<,./<>?^]', review)
             for word in words:
                 word = word.lower()
                 word = word.strip(punctuation)
+                word = re.sub(r'\s+', '', word)
                 if len(word) is not 0:
                     if word in vocabulary:
                         vocabulary[word] += 1
                     else:
                         vocabulary[word] = 1
-
     return vocabulary
 
 
@@ -63,9 +63,11 @@ def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, 
     for name in test_review:
         with open(filepath + name, "r") as reviews:
             review = reviews.read()
-            words = review.split()
+            words = re.split(r'[`=~!@#$%^&*()_+\[\]{};\--\\:"|<,./<>?^]', review)
             for word in words:
+                word = word.lower()
                 word = word.strip(punctuation)
+                word = re.sub(r'\s+', '', word)  # removing all leading and tailing space
                 if word in vocabulary:
                     prob *= ((vocabulary[word] + 1) / (number_of_word_in_class + total_vocabulary_size))
                 else:
@@ -111,6 +113,10 @@ small_training_corpus()
 
 # training_pos_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/pos")
 # training_neg_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/neg")
-# dictionary = training_vocabulary(training_neg_file_name, training_pos_file_name, "../movie-review-HW2/aclImdb/train/")
-# dictionary_frequency_viewer(dictionary)
-# print(len(dictionary))
+#
+# neg_vocabulary = set_vocabulary(training_neg_file_name[0], '../movie-review-HW2/aclImdb/train/neg/')
+# pos_vocabulary = set_vocabulary(training_pos_file_name[0], '../movie-review-HW2/aclImdb/train/pos/')
+#
+# training_vocabulary = merge_vocabulary(neg_vocabulary, pos_vocabulary)
+# dictionary_frequency_viewer(training_vocabulary)
+# print(len(training_vocabulary))

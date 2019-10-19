@@ -77,6 +77,37 @@ def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, 
     return prob
 
 
+def probability_method(test_files, neg_vocabulary, pos_vocabulary, filepath, training_vocabulary, total_neg_train_file,
+                       total_pos_train_file):
+    neg_counter_nr = 0
+    pos_counter_nr = 0
+    total_test_file = total_neg_train_file + total_pos_train_file
+    for i in range(0, len(test_files)):
+        neg_class_prob = naive_byes_classifier_bag_of_words_model(neg_vocabulary,
+                                                                  filepath,
+                                                                  test_files[i],
+                                                                  sum_of_values(neg_vocabulary),
+                                                                  len(training_vocabulary)) * float(
+            total_neg_train_file / total_test_file)
+
+        pos_class_prob = naive_byes_classifier_bag_of_words_model(pos_vocabulary,
+                                                                  filepath,
+                                                                  test_files[i],
+                                                                  sum_of_values(pos_vocabulary),
+                                                                  len(training_vocabulary)) * float(
+            total_pos_train_file / total_test_file)
+
+        if pos_class_prob > neg_class_prob:
+            pos_counter_nr += 1
+        else:
+            neg_counter_nr += 1
+
+    print(neg_counter_nr, pos_counter_nr)
+
+    return neg_counter_nr, pos_counter_nr
+
+
+# "../movie-review-HW2/aclImdb/test/neg/"
 def naive_byes_classifier():
     training_pos_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/pos")
     training_neg_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/neg")
@@ -86,31 +117,12 @@ def naive_byes_classifier():
     neg_vocabulary = set_vocabulary(training_neg_file_name, '../movie-review-HW2/aclImdb/train/neg/')
     pos_vocabulary = set_vocabulary(training_pos_file_name, '../movie-review-HW2/aclImdb/train/pos/')
     training_vocabulary = merge_vocabulary(neg_vocabulary, pos_vocabulary)
-    total_number_of_test_file = (len(test_neg_file_name) + len(test_pos_file_name))
-    total_neg_test_file = len(test_neg_file_name)
-    total_pos_test_file = len(test_pos_file_name)
-    neg_counter = 0
-    pos_counter = 0
-    for i in range(0, len(test_neg_file_name)):
-        neg_class_prob = naive_byes_classifier_bag_of_words_model(neg_vocabulary,
-                                                                  "../movie-review-HW2/aclImdb/test/neg/",
-                                                                  test_neg_file_name[i],
-                                                                  sum_of_values(neg_vocabulary),
-                                                                  len(training_vocabulary)) * float(
-            total_neg_test_file / total_number_of_test_file)
+    total_neg_train_file = len(training_neg_file_name)
+    total_pos_train_file = len(training_pos_file_name)
 
-        pos_class_prob = naive_byes_classifier_bag_of_words_model(pos_vocabulary,
-                                                                  "../movie-review-HW2/aclImdb/test/neg/",
-                                                                  test_neg_file_name[i],
-                                                                  sum_of_values(pos_vocabulary),
-                                                                  len(training_vocabulary)) * float(
-            total_pos_test_file / total_number_of_test_file)
-        if pos_class_prob > neg_class_prob:
-            pos_counter += 1
-        else:
-            neg_counter += 1
-
-    print(neg_counter, pos_counter)
+    neg_test_arr = probability_method(test_neg_file_name, neg_vocabulary, pos_vocabulary,
+                                      "../movie-review-HW2/aclImdb/test/neg/", training_vocabulary,
+                                      total_neg_train_file, total_pos_train_file)
 
 
 def small_training_corpus():

@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="968e8081-7451-4b2b-904c-a0c84bcd2bcf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Naive-Bayes-Classifier/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Naive-Bayes-Classifier/__init__.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,7 +24,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Image-Processing" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -92,6 +91,8 @@
       <workItem from="1571277526241" duration="1349000" />
       <workItem from="1571439672806" duration="13189000" />
       <workItem from="1571467467906" duration="1347000" />
+      <workItem from="1571498746392" duration="5000" />
+      <workItem from="1571518167446" duration="7000" />
     </task>
     <servers />
   </component>

@@ -104,8 +104,6 @@ def probability_method(test_files, neg_vocabulary, pos_vocabulary, filepath, tra
         else:
             neg_counter_nr += 1
 
-    print(neg_counter_nr, pos_counter_nr)
-
     return neg_counter_nr, pos_counter_nr
 
 
@@ -124,6 +122,14 @@ def naive_byes_classifier():
     neg_test_arr = probability_method(test_neg_file_name, neg_vocabulary, pos_vocabulary,
                                       "../movie-review-HW2/aclImdb/test/neg/", training_vocabulary,
                                       total_neg_train_file, total_pos_train_file)
+    pos_test_arr = probability_method(test_pos_file_name, neg_vocabulary, pos_vocabulary,
+                                      "../movie-review-HW2/aclImdb/test/pos/", training_vocabulary,
+                                      total_neg_train_file, total_pos_train_file)
+    pos_accuracy = pos_test_arr[1] / total_pos_train_file
+    neg_accuracy = neg_test_arr[0] / total_neg_train_file
+    print("Accuracy for positive class: ", pos_accuracy)
+    print("Accuracy for negative class: ", neg_accuracy)
+    print("Total Accuracy: ", (pos_accuracy + neg_accuracy) / 2)
 
 
 def small_training_corpus():

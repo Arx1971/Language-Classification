@@ -2,9 +2,8 @@ import os
 import re
 from collections import Counter
 from string import punctuation
+import math
 
-
-#  regular expression r'[\s+`=~!@#$%^&*()_+\[\]{};\--\\:"|<,./<>?^]'
 
 def file_name_viewer(file_name):
     for name in file_name:
@@ -70,9 +69,9 @@ def naive_byes_classifier_bag_of_words_model(vocabulary, filepath, test_review, 
             word = word.strip(punctuation)
             word = word.strip()
             if word in vocabulary:
-                prob *= float((vocabulary[word] + 1) / (number_of_word_in_class + total_vocabulary_size))
+                prob += math.log(float((vocabulary[word] + 1) / (number_of_word_in_class + total_vocabulary_size)), 2)
             else:
-                prob *= float((1) / (number_of_word_in_class + total_vocabulary_size))
+                prob += math.log(float((1) / (number_of_word_in_class + total_vocabulary_size)))
 
     return prob
 
@@ -82,20 +81,23 @@ def probability_method(test_files, neg_vocabulary, pos_vocabulary, filepath, tra
     neg_counter_nr = 0
     pos_counter_nr = 0
     total_test_file = total_neg_train_file + total_pos_train_file
+    negative_total_token = sum_of_values(neg_vocabulary)
+    positive_total_token = sum_of_values(pos_vocabulary)
     for i in range(0, len(test_files)):
+
         neg_class_prob = naive_byes_classifier_bag_of_words_model(neg_vocabulary,
                                                                   filepath,
                                                                   test_files[i],
-                                                                  sum_of_values(neg_vocabulary),
-                                                                  len(training_vocabulary)) * float(
-            total_neg_train_file / total_test_file)
+                                                                  negative_total_token,
+                                                                  len(training_vocabulary)) + math.log(
+            float(total_neg_train_file / total_test_file), 2)
 
         pos_class_prob = naive_byes_classifier_bag_of_words_model(pos_vocabulary,
                                                                   filepath,
                                                                   test_files[i],
-                                                                  sum_of_values(pos_vocabulary),
-                                                                  len(training_vocabulary)) * float(
-            total_pos_train_file / total_test_file)
+                                                                  positive_total_token,
+                                                                  len(training_vocabulary)) + math.log(
+            float(total_pos_train_file / total_test_file), 2)
 
         if pos_class_prob > neg_class_prob:
             pos_counter_nr += 1
@@ -107,7 +109,6 @@ def probability_method(test_files, neg_vocabulary, pos_vocabulary, filepath, tra
     return neg_counter_nr, pos_counter_nr
 
 
-# "../movie-review-HW2/aclImdb/test/neg/"
 def naive_byes_classifier():
     training_pos_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/pos")
     training_neg_file_name = read_all_file_name("../movie-review-HW2/aclImdb/train/neg")
@@ -133,9 +134,7 @@ def small_training_corpus():
     small_comedy_corpus_vocabulary = set_vocabulary(small_training_comedy_corpus, "../small_corpus//train/comedy/")
     small_corpus_vocabulary = merge_vocabulary(small_action_corpus_vocabulary, small_comedy_corpus_vocabulary)
 
-    # print(small_corpus_vocabulary)
-    # print(small_action_corpus_vocabulary)
-    # print(small_comedy_corpus_vocabulary)
+    sum1 = sum_of_values(small_action_corpus_vocabulary)
 
     total_number_of_training_files = (len(small_training_comedy_corpus) + len(small_training_action_corpus))
     total_action_training_files = len(small_training_action_corpus)
@@ -143,14 +142,16 @@ def small_training_corpus():
     action_class_prob = naive_byes_classifier_bag_of_words_model(small_action_corpus_vocabulary,
                                                                  "../small_corpus/test/",
                                                                  small_test_corpus[0],
-                                                                 sum_of_values(small_action_corpus_vocabulary),
+                                                                 sum1,
                                                                  len(small_corpus_vocabulary)) * float(
         total_action_training_files / total_number_of_training_files)
+
+    sum2 = sum_of_values(small_comedy_corpus_vocabulary)
 
     comedy_class_prob = naive_byes_classifier_bag_of_words_model(small_comedy_corpus_vocabulary,
                                                                  "../small_corpus/test/",
                                                                  small_test_corpus[0],
-                                                                 sum_of_values(small_comedy_corpus_vocabulary),
+                                                                 sum2,
                                                                  len(small_corpus_vocabulary)) * float(
         total_comedy_training_files / total_number_of_training_files)
     print("Probabilities for Action Class: ", action_class_prob)
